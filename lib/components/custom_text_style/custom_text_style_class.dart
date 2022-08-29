@@ -1,0 +1,40 @@
+import 'package:flutter/cupertino.dart';
+import '../../utils/colors_for_app.dart';
+import '../../utils/texts_for_app.dart';
+
+class MyTextStyle{
+  static regularStyle({Color fontColor = MyColors.primaryTextColor, double fontSize = 14}){
+    return TextStyle(
+      //fontFamily: MyTexts.solaimanFont,
+      //fontFamily: 'inherit',
+      fontFamily: MyTexts.solaimanFont,
+      color: fontColor,
+      fontSize: fontSize,
+    );
+  }
+  static regularStyle2({Color fontColor = MyColors.primaryTextColor, double fontSize = 14}){
+    return TextStyle(
+      //fontFamily: MyTexts.solaimanFont,
+      fontFamily: MyTexts.solaimanFont,
+      color: fontColor,
+      fontSize: fontSize,
+    );
+  }
+
+  static regularStyle3({Color fontColor = MyColors.primaryTextColor, double fontSize = 14}){
+    return TextStyle(
+      fontFamily: MyTexts.solaimanFont,
+      color: fontColor,
+      fontSize: fontSize,
+    );
+  }
+
+  static regularStyle4({Color fontColor = MyColors.primaryTextColor, double fontSize = 14, FontWeight fontWeight = FontWeight.bold}){
+    return TextStyle(
+        fontFamily: MyTexts.solaimanFont,
+      color: fontColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight
+    );
+  }
+}
