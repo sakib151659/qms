@@ -10,7 +10,6 @@ class MyTextFieldSignIn extends StatefulWidget {
   final Widget prefix;
   final Widget suffix;
   final String hintText;
-  final String autoFillHints;
   final String? Function(String?)? validatorFunction;
   const MyTextFieldSignIn(
       {Key? key,
@@ -20,7 +19,6 @@ class MyTextFieldSignIn extends StatefulWidget {
         required this.prefix,
         required this.suffix,
         required this.hintText,
-        required this.autoFillHints,
         this.validatorFunction})
       : super(key: key);
 
@@ -33,12 +31,11 @@ class _MyTextFieldSignInState extends State<MyTextFieldSignIn> {
   Widget build(BuildContext context) {
     return TextFormField(
       validator: widget.validatorFunction,
-      style: MyTextStyle.regularStyle(fontSize: 13),
+      style: MyTextStyle.regularStyle(fontSize: 13, fontColor: Colors.white),
       controller: widget.controller,
       keyboardType: widget.textInputType,
       obscureText: widget.isSecure,
       cursorColor: MyColors.secondaryColor,
-      autofillHints: [widget.autoFillHints],
       decoration: InputDecoration(
         prefixIcon: widget.prefix,
         suffixIcon: widget.suffix,
@@ -53,7 +50,7 @@ class _MyTextFieldSignInState extends State<MyTextFieldSignIn> {
             Radius.circular(7),
           ),
           borderSide: BorderSide(
-            color: MyColors.secondaryTextColor,
+            color: MyColors.customGreen,
             width: 0.5,
           ),
         ),
@@ -62,7 +59,7 @@ class _MyTextFieldSignInState extends State<MyTextFieldSignIn> {
             Radius.circular(7),
           ),
           borderSide: BorderSide(
-            color: MyColors.secondaryColor,
+            color: MyColors.customGreen,
             width: 0.9,
           ),
         ),
