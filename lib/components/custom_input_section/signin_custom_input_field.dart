@@ -41,7 +41,6 @@ class _MyTextFieldSignInState extends State<MyTextFieldSignIn> {
         suffixIcon: widget.suffix,
         contentPadding: const EdgeInsets.only(left: 10),
         hintText: widget.hintText,
-
         hintStyle: MyTextStyle.regularStyle(
             fontColor: MyColors.secondaryTextColor, fontSize: 13),
         alignLabelWithHint: true,

@@ -17,8 +17,8 @@ class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   bool isSecure = true;
+
   @override
   void dispose() {
     // TODO: implement dispose
