@@ -130,7 +130,7 @@ class _SignUpState extends State<SignUp> {
                   color: MyColors.customOrange,
                   onPressed: ()async {
                     if(_formKey.currentState!.validate()){
-                      dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim()) ;
+                      dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim(), MyTexts.na, MyTexts.na, MyTexts.user) ;
                       if(result == null){
                         setState(() {
                           //loading = false;

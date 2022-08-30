@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qms/models/user.dart';
 
+import 'database.dart';
+
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -48,15 +50,15 @@ class AuthService {
   }
 
   //register with email and pass
-  Future registerWithEmailAndPassword(String email, String password, String name) async {
+  Future registerWithEmailAndPassword(String email, String password, String name, String branchName, String counterNumber, String designation) async {
 
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       // create a new document for the user
 
-      //await DatabaseService(uid: user.uid).updateUserData( name, result.user.email, 'Your Mobile Number', 'Your Gender', 10 ,now, 'Your Address');
-      return _userFromFirebaseUser(user!);
+      await DatabaseService(uid: user!.uid).updateUserData(name, result.user!.email.toString(), branchName, counterNumber, designation);
+      return _userFromFirebaseUser(user);
     } catch(e){
       //print(e.toString());
       return null;
