@@ -4,6 +4,9 @@ import 'package:qms/components/custom_text_style/custom_text_style_class.dart';
 import 'package:qms/utils/colors_for_app.dart';
 import 'package:qms/utils/texts_for_app.dart';
 
+import '../../components/snackbar/custom_snackbar.dart';
+import '../../services/auth.dart';
+
 class SignIn extends StatefulWidget {
   final Function toggleView;
 
@@ -14,6 +17,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final AuthService _auth = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -108,7 +112,19 @@ class _SignInState extends State<SignIn> {
 
                 MaterialButton(
                   color: MyColors.customGreen,
-                    onPressed: (){
+                    onPressed: ()async{
+                    if(_formKey.currentState!.validate()){
+                      dynamic result = await _auth.signInWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
+                      if(result == null){
+                        setState(() {
+                          //loading = false;
+                        });
+
+                        CustomSnackBar(context: context, isSuccess: false, message: 'Invalid Credentials!').show();
+                      }else{
+                        CustomSnackBar(context: context, isSuccess: true, message: 'Signed in successfully!').show();
+                      }
+                    }
 
                     },
                   child: Text(MyTexts.signIn, style: MyTextStyle.regularStyle(fontColor: Colors.white), ),
