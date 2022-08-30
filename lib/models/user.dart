@@ -1,12 +1,16 @@
-class User{
+// class User{
+//
+//   final String? uid;
+//
+//   User({this.uid,});
+//
+// }
 
+class CurrentUserModel {
   final String? uid;
 
-  User({this.uid,});
-
+  CurrentUserModel ({ this.uid });
 }
-
-
 // // user data model for personal profile
 // class UserData{
 //   final String uid;

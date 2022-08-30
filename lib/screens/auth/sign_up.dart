@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:qms/components/snackbar/custom_snackbar.dart';
 import '../../components/custom_input_section/signin_custom_input_field.dart';
 import '../../components/custom_text_style/custom_text_style_class.dart';
+import '../../services/auth.dart';
 import '../../utils/colors_for_app.dart';
 import '../../utils/texts_for_app.dart';
 
@@ -13,6 +15,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final AuthService _auth = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -125,7 +128,19 @@ class _SignUpState extends State<SignUp> {
 
                 MaterialButton(
                   color: MyColors.customOrange,
-                  onPressed: (){
+                  onPressed: ()async {
+                    if(_formKey.currentState!.validate()){
+                      dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim()) ;
+                      if(result == null){
+                        setState(() {
+                          //loading = false;
+                        });
+
+                        CustomSnackBar(context: context, isSuccess: false, message: 'Please enter a valid email!').show();
+                      }else{
+                        CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
+                      }
+                    }
 
                   },
                   child: Text(MyTexts.signUp, style: MyTextStyle.regularStyle(fontColor: Colors.white), ),
