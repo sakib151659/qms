@@ -22,12 +22,16 @@ class Wrapper extends StatelessWidget {
   // }
 
 
+
   @override
   Widget build(BuildContext context) =>Scaffold(
+
     body: StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot){
         if(snapshot.hasData){
+          final user = FirebaseAuth.instance.currentUser!;
+          print(user.email);
           return Admin();
         }
         else{
