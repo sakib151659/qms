@@ -9,14 +9,18 @@ class AuthService {
 
   // Create an user object based on firebase user
   CurrentUserModel? _userFromFirebaseUser(User user) {
-    return user != null ? CurrentUserModel (uid: user.uid) : null;
+    return  CurrentUserModel (uid: user.uid);
   }
+
 
   // auth change user stream
   Stream<CurrentUserModel?> get user{
     return _auth.authStateChanges()
     .map((User? user) => _userFromFirebaseUser(user!));
   }
+
+  //Stream<CurrentUserModel?> get authStateChanges => _auth.authStateChanges();
+
 
 
 
@@ -72,7 +76,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e){
-      //print(e.toString());
+      print(e.toString());
       return null;
 
     }

@@ -7,9 +7,9 @@
 // }
 
 class CurrentUserModel {
-  final String? uid;
+  final String uid;
 
-  CurrentUserModel ({ this.uid });
+  CurrentUserModel ({ required this.uid });
 }
 // // user data model for personal profile
 // class UserData{
