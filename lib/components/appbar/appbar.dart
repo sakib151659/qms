@@ -13,19 +13,6 @@ static getAppBar(BuildContext context, String title) {
     backgroundColor: MyColors.secondaryColor,
     elevation: 1,
     actions: [
-      // Row(
-      //   children: [
-      //     Text("Logout"),
-      //     IconButton(
-      //         icon: const Icon(
-      //           Icons.logout,
-      //           color: MyColors.customOrange,
-      //         ),
-      //         onPressed: () async {
-      //           await AuthService().signOut();
-      //         }),
-      //   ],
-      // ),
 
       TextButton.icon(
           onPressed: () async {
@@ -35,7 +22,7 @@ static getAppBar(BuildContext context, String title) {
             Icons.logout,
             color: Colors.white,
           ),
-          label: Text("Logout", style: TextStyle(color: Colors.white),)
+          label: const Text("Logout", style: TextStyle(color: Colors.white),)
       )
     ],
     title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 22),),

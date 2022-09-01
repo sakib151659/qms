@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qms/components/custom_input_section/signin_custom_input_field.dart';
 import 'package:qms/components/custom_text_style/custom_text_style_class.dart';
+import 'package:qms/components/loading_screen/custom_loading.dart';
 import 'package:qms/utils/colors_for_app.dart';
 import 'package:qms/utils/texts_for_app.dart';
 
@@ -22,7 +23,7 @@ class _SignInState extends State<SignIn> {
   TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool isSecure = true;
-
+  bool isLoading = false;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -32,7 +33,8 @@ class _SignInState extends State<SignIn> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading? const CustomLoading():
+    Scaffold(
       backgroundColor: MyColors.primaryColor,
       body: SafeArea(
         child: Padding(
@@ -114,15 +116,21 @@ class _SignInState extends State<SignIn> {
                   color: MyColors.customGreen,
                     onPressed: ()async{
                     if(_formKey.currentState!.validate()){
+                      setState(() {
+                        isLoading = true;
+                      });
                       dynamic result = await _auth.signInWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
                       if(result == null){
                         setState(() {
-                          //loading = false;
+                          isLoading = false;
                         });
 
                         CustomSnackBar(context: context, isSuccess: false, message: 'Invalid Credentials!').show();
                       }else{
                         CustomSnackBar(context: context, isSuccess: true, message: 'Signed in successfully!').show();
+                        setState(() {
+                          isLoading = false;
+                        });
                       }
                     }
 
