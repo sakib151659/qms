@@ -7,5 +7,12 @@ class MyTexts {
   static const String user = "User";
   static const String admin = "Admin";
   static const String counter = "Counter";
+  static const String selectItem = "Select";
+  static const String branchA = "Branch A";
+  static const String branchB = "Branch B";
+  static const String branchC = "Branch C";
+  static const String counter1 = "Counter 1";
+  static const String counter2 = "Counter 2";
+  static const String counter3 = "Counter 3";
 
 }

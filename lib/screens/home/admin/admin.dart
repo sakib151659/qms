@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:qms/components/appbar/appbar.dart';
+import 'package:qms/components/custom_dropdown/custom_dropdown.dart';
 import 'package:qms/components/custom_text_style/custom_text_style_class.dart';
 import 'package:qms/utils/colors_for_app.dart';
+import 'package:qms/utils/texts_for_app.dart';
 
 import '../../../components/custom_input_section/signin_custom_input_field.dart';
+import '../../../components/snackbar/custom_snackbar.dart';
+import '../../../services/auth.dart';
 
 class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
@@ -15,6 +19,43 @@ class Admin extends StatefulWidget {
 class _AdminState extends State<Admin> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  List <String> branchNameList = [MyTexts.branchA, MyTexts.branchB, MyTexts.branchC];
+  List <String> counterNoList = [MyTexts.counter1,MyTexts.counter2, MyTexts.counter3];
+  String branchName = "";
+  String counterNo = "";
+  bool isSecure = true;
+  final AuthService _auth = AuthService();
+  void _branchNameCallback(value) {
+    if (value != null) {
+      setState(() {
+        branchName = value.toString();
+      });
+    }
+  }
+  void _counterNoCallback(value) {
+    if (value != null) {
+      setState(() {
+        counterNo = value.toString();
+      });
+    }
+  }
+
+  void _clearFields(){
+    emailController.clear();
+    passwordController.clear();
+    branchName = "";
+    counterNo = "";
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +139,23 @@ class _AdminState extends State<Admin> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.85,
               ),
+              // const SizedBox(
+              //   height: 15,
+              // ),
+              LocalDropDown(
+                  hintText: "Select Branch Name",
+                  dropDownList: branchNameList,
+                  callBackFunction: _branchNameCallback
+              ),
+              const SizedBox(
+                height: 15,
+              ),
 
-
-
-
+              LocalDropDown(
+                  hintText: "Select Counter No",
+                  dropDownList: counterNoList,
+                  callBackFunction: _counterNoCallback
+              ),
               const SizedBox(
                 height: 15,
               ),
@@ -110,10 +164,30 @@ class _AdminState extends State<Admin> {
                 textInputType: TextInputType.text,
                 prefix: const Icon(Icons.email),
                 suffix: const SizedBox(),
-                hintText: "Enter your Email",
+                hintText: "Enter an email for counter",
                 validatorFunction: (value){
                   if(value == null || value.isEmpty){
                     return "Field can not be empty";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              MyTextFieldSignIn(
+                controller: passwordController,
+                textInputType: TextInputType.text,
+                prefix: const Icon(Icons.lock),
+                suffix: _passwordVisibility(),
+                hintText: "Enter an password for counter",
+                isSecure: isSecure,
+                validatorFunction: (value){
+                  if(value == null || value.isEmpty){
+                    return "Field can not be empty";
+                  }
+                  else if(value.length < 8){
+                    return "Password less than 8";
                   }
                   return null;
                 },
@@ -127,13 +201,27 @@ class _AdminState extends State<Admin> {
                 children: [
                   Expanded(
                     child: MaterialButton(
-                      onPressed: () {
+                      onPressed: () async{
                         if (_formKey.currentState!.validate()) {
+                          dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), MyTexts.na, branchName, counterNo, MyTexts.counter) ;
 
+                          if(result == null){
+                            // setState(() {
+                            //   isLoading = false;
+                            // });
+                            CustomSnackBar(context: context, isSuccess: false, message: 'Please enter valid credentials!').show();
+                          }else{
+                            CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
+                            _clearFields();
+                            // setState(() {
+                            //   isLoading = false;
+                            // });
+
+                          }
                         }
                         Navigator.of(context, rootNavigator: true).pop();
                       },
-                      color: Colors.orangeAccent,
+                      color: MyColors.customGreen,
                       height: 40,
                       elevation: 0,
                       shape: const RoundedRectangleBorder(
@@ -144,7 +232,7 @@ class _AdminState extends State<Admin> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Icon(Icons.person_add, color: Colors.white,),
+                          const Icon(Icons.add_to_home_screen, color: Colors.white,),
                           Text("Register",
                             style: MyTextStyle.regularStyle(
                               fontColor: Colors.white,
@@ -190,6 +278,17 @@ class _AdminState extends State<Admin> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _passwordVisibility() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          isSecure = !isSecure;
+        });
+      },
+      child: Icon(isSecure ? Icons.visibility_off : Icons.visibility, size: 18),
     );
   }
 
