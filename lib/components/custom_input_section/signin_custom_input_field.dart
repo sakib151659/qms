@@ -31,7 +31,7 @@ class _MyTextFieldSignInState extends State<MyTextFieldSignIn> {
   Widget build(BuildContext context) {
     return TextFormField(
       validator: widget.validatorFunction,
-      style: MyTextStyle.regularStyle(fontSize: 13, fontColor: Colors.white),
+      style: MyTextStyle.regularStyle(fontSize: 13, fontColor: MyColors.primaryTextColor),
       controller: widget.controller,
       keyboardType: widget.textInputType,
       obscureText: widget.isSecure,

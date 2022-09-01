@@ -67,7 +67,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 20.0),
 
                 const Text("SIGN UP",
-                  style: TextStyle(color: Colors.white, fontSize: 40.0, ),
+                  style: TextStyle(color: MyColors.primaryTextColor, fontSize: 40.0, ),
                 ),
 
                 const SizedBox(height: 20.0),
@@ -154,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                       const FittedBox(
                         child: Text(
                           "Already have an Account?",
-                          style: TextStyle(color: Colors.white, fontSize: 15.0),
+                          style: TextStyle(color: MyColors.primaryTextColor, fontSize: 15.0),
                         ),
                       ),
                       InkWell(
