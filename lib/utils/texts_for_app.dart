@@ -15,4 +15,10 @@ class MyTexts {
   static const String counter2 = "Counter 2";
   static const String counter3 = "Counter 3";
 
+
+  //constants for shared preference
+  static const String email = "email";
+  static const String uid = "uid";
+
+
 }

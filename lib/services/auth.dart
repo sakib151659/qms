@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qms/models/user.dart';
-
+import 'package:qms/utils/texts_for_app.dart';
 import 'database.dart';
+import 'local_storage_manager.dart';
 
 class AuthService {
 
@@ -45,7 +46,8 @@ class AuthService {
     try{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
-      return _userFromFirebaseUser(user!);
+      _sharedPreference(user!);
+      return _userFromFirebaseUser(user);
     } catch(e){
       //print(e.toString());
       return null;
@@ -74,12 +76,33 @@ class AuthService {
   //signout
   Future signOut() async {
     try {
+      _sharedPreferenceDataRemove();
       return await _auth.signOut();
     } catch (e){
       print(e.toString());
       return null;
 
     }
+
+
+  }
+
+
+  //save data at shared preference
+  _sharedPreference(User user) {
+    print('uid: ${user.uid}');
+    LocalStorageManager.saveData(MyTexts.uid, user.uid);
+    LocalStorageManager.saveData(MyTexts.email, user.email);
+  }
+
+  //delete data at shared preference
+  _sharedPreferenceDataRemove() {
+    LocalStorageManager.deleteData(
+      MyTexts.uid,
+    );
+    LocalStorageManager.deleteData(
+      MyTexts.email,
+    );
   }
 
 }
