@@ -12,6 +12,7 @@ static getAppBar(BuildContext context, String title) {
   return AppBar(
     //backwardsCompatibility: false,
     //systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.white),
+    automaticallyImplyLeading:false,
     backgroundColor: MyColors.secondaryColor,
     elevation: 1,
     actions: [

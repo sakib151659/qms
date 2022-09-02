@@ -130,7 +130,7 @@ class _SignInState extends State<SignIn> {
                         CustomSnackBar(context: context, isSuccess: false, message: 'Invalid Credentials!').show();
                       }else{
                         CustomSnackBar(context: context, isSuccess: true, message: 'Signed in successfully!').show();
-                        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context)=>Wrapper())) ;
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Wrapper())) ;
 
                         setState(() {
                           isLoading = false;

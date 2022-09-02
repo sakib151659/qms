@@ -14,6 +14,10 @@ class MyTexts {
   static const String counter1 = "Counter 1";
   static const String counter2 = "Counter 2";
   static const String counter3 = "Counter 3";
+  static const String branchName = "branchName";
+  static const String counterNumber = "counterNumber";
+  static const String designation = "designation";
+
 
 
   //constants for shared preference

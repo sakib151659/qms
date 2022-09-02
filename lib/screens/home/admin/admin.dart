@@ -7,8 +7,11 @@ import 'package:qms/utils/colors_for_app.dart';
 import 'package:qms/utils/texts_for_app.dart';
 
 import '../../../components/custom_input_section/signin_custom_input_field.dart';
+import '../../../components/loading_screen/custom_loading.dart';
 import '../../../components/snackbar/custom_snackbar.dart';
+import '../../../models/counter_model.dart';
 import '../../../services/auth.dart';
+import '../../../services/database.dart';
 
 class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
@@ -23,7 +26,7 @@ class _AdminState extends State<Admin> {
   TextEditingController passwordController = TextEditingController();
   List <String> branchNameList = [MyTexts.branchA, MyTexts.branchB, MyTexts.branchC];
   List <String> counterNoList = [MyTexts.counter1,MyTexts.counter2, MyTexts.counter3];
-  //CollectionReference regRef = FirebaseFirestore.instance.collection("");
+  CollectionReference regRef = FirebaseFirestore.instance.collection("registerTableCounter");
   String branchName = "";
   String counterNo = "";
   bool isSecure = true;
@@ -67,38 +70,114 @@ class _AdminState extends State<Admin> {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Column(
           children: [
-            const SizedBox(height: 20,),
-            Text("QMS",
-              style: MyTextStyle.regularStyle4(
-                  fontColor: MyColors.primaryTextColor,
-                  fontSize: 50,
-                  fontWeight: FontWeight.w600
-              ),),
-            Text("Que Management System",
-              style: MyTextStyle.regularStyle4(
-                  fontColor: MyColors.primaryTextColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600
-              ),),
-            const SizedBox(height: 20,),
-            MaterialButton(
-                onPressed: (){
-                  _addCounter();
-                },
-              color: MyColors.customGreen,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Expanded(
+              flex: 4,
+              child: Column(
                 children: [
-                const Icon(Icons.person_add, color: Colors.white,),
-                const SizedBox(width: 10,),
-                Text("Add Counter", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
-              ],),
+                  const SizedBox(height: 20,),
+                  Text("QMS",
+                    style: MyTextStyle.regularStyle4(
+                        fontColor: MyColors.primaryTextColor,
+                        fontSize: 50,
+                        fontWeight: FontWeight.w600
+                    ),),
+                  Text("Que Management System",
+                    style: MyTextStyle.regularStyle4(
+                        fontColor: MyColors.primaryTextColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600
+                    ),),
+                  const SizedBox(height: 20,),
+                  MaterialButton(
+                      onPressed: (){
+                        _addCounter();
+                      },
+                    color: MyColors.customGreen,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      const Icon(Icons.person_add, color: Colors.white,),
+                      const SizedBox(width: 10,),
+                      Text("Add Counter", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
+                    ],),
+                  ),
+                  const SizedBox(height: 20,),
+                ],
+              ),
             ),
-            const SizedBox(height: 20,),
+
             
             // StreamBuilder(
-            //   stream: ,
-            //     builder: builder)
+            //   stream: regRef.snapshots(),
+            //     builder: (context, snapshot){
+            //     if(snapshot.hasError){
+            //       return Text("Error");
+            //      }
+            //     if(snapshot.hasData){
+            //       return ListView.builder(
+            //         itemCount: snapshot.data.toString().length,
+            //           itemBuilder: (context, index){
+            //           DocumentSnapshot doc = snapshot.data!.;
+            //           return Text("${snapshot.data!.d}");
+            //           });
+            //        }
+            //     return Text("loading");
+            //     }
+            //
+            // ),
+
+            Text("All Counters",
+              style: MyTextStyle.regularStyle4(
+                  fontColor: MyColors.primaryTextColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600
+              ),),
+
+            const SizedBox(height: 10,),
+            Expanded(
+              flex: 8,
+              child: StreamBuilder(
+                  stream: regRef.snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if(!snapshot.hasData){
+                      //print(snapshot.data.documents.toString());
+
+                      return const CustomLoading();
+
+                    }
+                    return  ListView(
+                      children: snapshot.data!.docs.map((document){
+                        return Card(
+                          color: Colors.black54,
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
+                                title: Text('\n'+document['email'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    )),
+                                subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      //fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      letterSpacing: 2,
+                                    )),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }
+              ),
+            )
+
+
+
             
           ],
         ),
