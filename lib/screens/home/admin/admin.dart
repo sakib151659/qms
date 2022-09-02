@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:qms/components/appbar/appbar.dart';
 import 'package:qms/components/custom_dropdown/custom_dropdown.dart';
@@ -22,6 +23,7 @@ class _AdminState extends State<Admin> {
   TextEditingController passwordController = TextEditingController();
   List <String> branchNameList = [MyTexts.branchA, MyTexts.branchB, MyTexts.branchC];
   List <String> counterNoList = [MyTexts.counter1,MyTexts.counter2, MyTexts.counter3];
+  //CollectionReference regRef = FirebaseFirestore.instance.collection("");
   String branchName = "";
   String counterNo = "";
   bool isSecure = true;
@@ -91,7 +93,13 @@ class _AdminState extends State<Admin> {
                 const SizedBox(width: 10,),
                 Text("Add Counter", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
               ],),
-            )
+            ),
+            const SizedBox(height: 20,),
+            
+            // StreamBuilder(
+            //   stream: ,
+            //     builder: builder)
+            
           ],
         ),
       ),
@@ -203,8 +211,7 @@ class _AdminState extends State<Admin> {
                     child: MaterialButton(
                       onPressed: () async{
                         if (_formKey.currentState!.validate()) {
-                          dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), MyTexts.na, branchName, counterNo, MyTexts.counter) ;
-
+                          dynamic result = await _auth.registerCounterWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), branchName, counterNo, MyTexts.counter) ;
                           if(result == null){
                             // setState(() {
                             //   isLoading = false;

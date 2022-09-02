@@ -11,22 +11,16 @@ class DataController extends GetxController{
     return snapshot.docs;
   }
 
-  static Future <QuerySnapshot<Map<String, dynamic>>>getIsAdmin(String queryEmail, ) async{
-    return FirebaseFirestore.instance.collection('registerTable')
-        .where('email', isEqualTo: queryEmail)
-        .where('designation', isEqualTo: MyTexts.admin)
-        .get();
-  }
 
   static Future <QuerySnapshot<Map<String, dynamic>>>getIsCounter(String queryEmail, ) async{
-    return await FirebaseFirestore.instance.collection('registerTable')
+    return await FirebaseFirestore.instance.collection('registerTableCounter')
         .where('email', isEqualTo: queryEmail)
         .where('designation', isEqualTo: MyTexts.counter)
         .get();
   }
 
   static Future <QuerySnapshot<Map<String, dynamic>>>getIsUser(String queryEmail, ) async{
-    return FirebaseFirestore.instance.collection('registerTable')
+    return FirebaseFirestore.instance.collection('registerTableUser')
         .where('email', isEqualTo: queryEmail)
         .where('designation', isEqualTo: MyTexts.user)
         .get();

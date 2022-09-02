@@ -55,15 +55,29 @@ class AuthService {
     }
   }
 
-  //register with email and pass
-  Future registerWithEmailAndPassword(String email, String password, String name, String branchName, String counterNumber, String designation) async {
-
+  //register User with email and pass
+  Future registerUserWithEmailAndPassword(String email, String password, String name, String designation) async {
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
       // create a new document for the user
 
-      await DatabaseService(uid: user!.uid).updateUserData(name, result.user!.email.toString(), branchName, counterNumber, designation);
+      await DatabaseService(uid: user!.uid).updateRegisterTableUser(name, result.user!.email.toString(), designation);
+      return _userFromFirebaseUser(user);
+    } catch(e){
+      //print(e.toString());
+      return null;
+
+    }
+  }
+
+  //register User with email and pass
+  Future registerCounterWithEmailAndPassword(String email, String password, String branchName, String counterNumber, String designation) async {
+    try{
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User? user = result.user;
+      // create a new document for the user
+      await DatabaseService(uid: user!.uid).updateRegisterTableCounter(email, branchName, counterNumber, designation);
       return _userFromFirebaseUser(user);
     } catch(e){
       //print(e.toString());

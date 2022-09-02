@@ -22,19 +22,14 @@ class _DesignationCheckerState extends State<DesignationChecker> {
   @override
   Widget build(BuildContext context) {
      if (count<1) {
-       DataController.getIsAdmin(widget.currentUserEmail).then((value) => {
-             if (value.docs.toList().isNotEmpty)
-               {
-                 print(value.docs.toString()),
-                 print("admin"),
-
-                 setState(() {
-                   isAdmin = true;
-                   isCounter = false;
-                   isUser = false;
-                 }),
-               }
-           });
+       if(widget.currentUserEmail=="admin@gmail.com"){
+         print("admin");
+         setState(() {
+           isAdmin = true;
+           isCounter = false;
+           isUser = false;
+         });
+       }
 
        DataController.getIsCounter(widget.currentUserEmail).then((value) => {
          if (value.docs.toList().isNotEmpty)

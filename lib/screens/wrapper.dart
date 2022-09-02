@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qms/screens/designation_checker.dart';
-import 'package:qms/screens/home/admin/admin.dart';
-import 'package:qms/screens/home/counter/counter.dart';
-import 'package:qms/screens/home/user/user.dart';
-import 'package:qms/services/dataController.dart';
+import 'package:qms/services/local_storage_manager.dart';
+import 'package:qms/utils/texts_for_app.dart';
 import 'auth/authenticate.dart';
 
 class Wrapper extends StatefulWidget {
@@ -22,7 +20,7 @@ class _WrapperState extends State<Wrapper> {
 
   bool isCounter = false;
 
-
+  //String userEmail = LocalStorageManager.readData(MyTexts.email).toString();
 
 
   void check() async {}

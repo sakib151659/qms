@@ -5,11 +5,10 @@ class DatabaseService {
   final String uid;
   //final String email;
   DatabaseService({required this.uid});
-  //add users information
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('registerTable');
-  Future updateUserData(String userName, String email, String branchName, String counterNumber, String designation) async {
-    return await userCollection.doc(uid).set({
-      'userName' : userName,
+  //add counter information
+  final CollectionReference collectionOfRegisterTableCounter= FirebaseFirestore.instance.collection('registerTableCounter');
+  Future updateRegisterTableCounter(String email, String branchName, String counterNumber, String designation) async {
+    return await collectionOfRegisterTableCounter.doc(uid).set({
       'branchName' : branchName,
       'counterNumber' : counterNumber,
       'email' : email,
@@ -17,6 +16,16 @@ class DatabaseService {
     });
   }
 
+
+  //add users information
+  final CollectionReference collectionOfRegisterTableUser= FirebaseFirestore.instance.collection('registerTableUser');
+  Future updateRegisterTableUser(String userName, String email, String designation) async {
+    return await collectionOfRegisterTableUser.doc(uid).set({
+      'userName' : userName,
+      'email' : email,
+      'designation' : designation
+    });
+  }
 
 
 //add Scammers information

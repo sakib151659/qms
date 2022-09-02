@@ -136,7 +136,8 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         isLoading = true;
                       });
-                      dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim(), MyTexts.na, MyTexts.na, MyTexts.user) ;
+                      //dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim(), MyTexts.na, MyTexts.na, MyTexts.user) ;
+                      dynamic result = await _auth.registerUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), nameController.text.trim(), MyTexts.user);
                       if(result == null){
                         setState(() {
                           isLoading = false;
