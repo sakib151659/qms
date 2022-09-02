@@ -46,7 +46,8 @@ class AuthService {
     try{
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
-      _sharedPreference(user!);
+
+      await _sharedPreference(uid: user!.uid, email: user.email.toString());
       return _userFromFirebaseUser(user);
     } catch(e){
       //print(e.toString());
@@ -90,7 +91,7 @@ class AuthService {
   //signout
   Future signOut() async {
     try {
-      _sharedPreferenceDataRemove();
+      await _sharedPreferenceDataRemove();
       return await _auth.signOut();
     } catch (e){
       print(e.toString());
@@ -103,10 +104,11 @@ class AuthService {
 
 
   //save data at shared preference
-  _sharedPreference(User user) {
-    print('uid: ${user.uid}');
-    LocalStorageManager.saveData(MyTexts.uid, user.uid);
-    LocalStorageManager.saveData(MyTexts.email, user.email);
+  _sharedPreference({required String uid, required String email}) {
+    //print('uid: ${user.uid}');
+    //LocalStorageManager.saveData(MyTexts.uid, user.uid);
+    print("user email firebase:$email");
+    LocalStorageManager.saveData(MyTexts.email, email);
   }
 
   //delete data at shared preference

@@ -18,30 +18,37 @@ class CustomSnackBar {
         content: SingleChildScrollView(
           child: Row(
             children: [
-              Container(
-                width: 30,
-                child: Icon(
-                  isSuccess! ? Icons.check : Icons.close,
-                  size: 20,
-                  color: Colors.white,
-                ),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isSuccess! ? Colors.green : Colors.red,
+              Expanded(
+                flex: 2,
+                child: Container(
+                  //width: 30,
+                  child: Icon(
+                    isSuccess! ? Icons.check : Icons.close,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSuccess! ? Colors.green : Colors.red,
+                  ),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context!).size.width*.75,
-                child: Text(message != null ? message! : "Something Went Wrong",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isSuccess! ? Colors.green : Colors.red,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis),
+              // const Expanded(
+              //   flex: 1,
+              //   child: SizedBox(),
+              // ),
+              Expanded(
+                flex: 14,
+                child: SizedBox(
+                  //width: MediaQuery.of(context!).size.width*.75,
+                  child: Text(message != null ? message! : "Something Went Wrong",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isSuccess! ? Colors.green : Colors.red,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ),
               ),
             ],
           ),

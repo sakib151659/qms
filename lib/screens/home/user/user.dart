@@ -4,6 +4,7 @@ import 'package:qms/screens/home/user/que_list_page.dart';
 import '../../../components/appbar/appbar.dart';
 import '../../../services/auth.dart';
 import '../../../utils/colors_for_app.dart';
+import '../../wrapper.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class _UserPageState extends State<UserPage> {
             TextButton.icon(
                 onPressed: () async {
                   await AuthService().signOut();
+                  Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context)=>Wrapper())) ;
                 },
                 icon: const Icon(
                   Icons.logout,

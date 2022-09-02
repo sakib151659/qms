@@ -20,30 +20,53 @@ class _WrapperState extends State<Wrapper> {
 
   bool isCounter = false;
 
-  //String userEmail = LocalStorageManager.readData(MyTexts.email).toString();
+  void _check() async {
+    String userEmail = await LocalStorageManager.readData(MyTexts.email);
+    if(userEmail.isNotEmpty){
+      setState(() {
+        currentUserEmail = userEmail;
+      });
+    }else{
+      setState(() {
+        currentUserEmail = MyTexts.na;
+      });
+    }
+  }
 
-
-  void check() async {}
   int count = 0;
+  // @override
+  // Widget build(BuildContext context) => Scaffold(
+  //       body: StreamBuilder<User?>(
+  //         stream: FirebaseAuth.instance.authStateChanges(),
+  //         builder: (context, snapshot) {
+  //
+  //           //checking user either signed in or signed out
+  //           if (snapshot.hasData) {
+  //
+  //             final user = FirebaseAuth.instance.currentUser!;
+  //             currentUserEmail = user.email.toString();
+  //
+  //             print(currentUserEmail);
+  //
+  //             return DesignationChecker(currentUserEmail: currentUserEmail,);
+  //           } else {
+  //             return const Authenticate();
+  //           }
+  //         },
+  //       ),
+  //     );
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
+  void initState(){
+    super.initState();
+    _check();
+  }
+  // new code
+  @override
+  Widget build(BuildContext context) {
+    print("user eamil wrapper : $currentUserEmail");
 
-            //checking user either signed in or signed out
-            if (snapshot.hasData) {
+    return currentUserEmail.contains("@")? DesignationChecker(currentUserEmail: currentUserEmail,) : const Authenticate();
+  }
 
-              final user = FirebaseAuth.instance.currentUser!;
-              currentUserEmail = user.email.toString();
-
-              print(currentUserEmail);
-
-              return DesignationChecker(currentUserEmail: currentUserEmail,);
-            } else {
-              return const Authenticate();
-            }
-          },
-        ),
-      );
 }

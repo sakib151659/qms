@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qms/components/custom_input_section/signin_custom_input_field.dart';
 import 'package:qms/components/custom_text_style/custom_text_style_class.dart';
 import 'package:qms/components/loading_screen/custom_loading.dart';
+import 'package:qms/screens/designation_checker.dart';
+import 'package:qms/screens/wrapper.dart';
 import 'package:qms/utils/colors_for_app.dart';
 import 'package:qms/utils/texts_for_app.dart';
 
@@ -93,7 +95,7 @@ class _SignInState extends State<SignIn> {
                       MyTextFieldSignIn(
                         controller: passwordController,
                         textInputType: TextInputType.text,
-                        prefix: const Icon(Icons.key),
+                        prefix: const Icon(Icons.vpn_key_rounded),
                         suffix: _passwordVisibility(),
                         hintText: "Enter your password",
                         isSecure: isSecure,
@@ -128,6 +130,8 @@ class _SignInState extends State<SignIn> {
                         CustomSnackBar(context: context, isSuccess: false, message: 'Invalid Credentials!').show();
                       }else{
                         CustomSnackBar(context: context, isSuccess: true, message: 'Signed in successfully!').show();
+                        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context)=>Wrapper())) ;
+
                         setState(() {
                           isLoading = false;
                         });
