@@ -92,6 +92,7 @@ class AuthService {
   Future signOut() async {
     try {
       await _sharedPreferenceDataRemove();
+      LocalStorageManager.saveData(MyTexts.email, MyTexts.na);
       return await _auth.signOut();
     } catch (e){
       print(e.toString());
@@ -106,9 +107,10 @@ class AuthService {
   //save data at shared preference
   _sharedPreference({required String uid, required String email}) {
     //print('uid: ${user.uid}');
-    //LocalStorageManager.saveData(MyTexts.uid, user.uid);
+
     print("user email firebase:$email");
     LocalStorageManager.saveData(MyTexts.email, email);
+    LocalStorageManager.saveData(MyTexts.uid, uid);
   }
 
   //delete data at shared preference
