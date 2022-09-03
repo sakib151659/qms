@@ -64,6 +64,7 @@ class _AdminState extends State<Admin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: MyColors.primaryColor,
       appBar: CustomAppbar.getAppBar(context, "Admin Panel"),
       body: Padding(
@@ -74,7 +75,7 @@ class _AdminState extends State<Admin> {
               flex: 4,
               child: Column(
                 children: [
-                  const SizedBox(height: 20,),
+                  const SizedBox(height: 15,),
                   Text("QMS",
                     style: MyTextStyle.regularStyle4(
                         fontColor: MyColors.primaryTextColor,
@@ -135,7 +136,7 @@ class _AdminState extends State<Admin> {
 
             const SizedBox(height: 10,),
             Expanded(
-              flex: 8,
+              flex: 10,
               child: StreamBuilder(
                   stream: regRef.snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -220,147 +221,149 @@ class _AdminState extends State<Admin> {
         scrollable: true,
         content: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.85,
-              ),
-              // const SizedBox(
-              //   height: 15,
-              // ),
-              LocalDropDown(
-                  hintText: "Select Branch Name",
-                  dropDownList: branchNameList,
-                  callBackFunction: _branchNameCallback
-              ),
-              const SizedBox(
-                height: 15,
-              ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                ),
+                // const SizedBox(
+                //   height: 15,
+                // ),
+                LocalDropDown(
+                    hintText: "Select Branch Name",
+                    dropDownList: branchNameList,
+                    callBackFunction: _branchNameCallback
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
 
-              LocalDropDown(
-                  hintText: "Select Counter No",
-                  dropDownList: counterNoList,
-                  callBackFunction: _counterNoCallback
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              MyTextFieldSignIn(
-                controller: emailController,
-                textInputType: TextInputType.text,
-                prefix: const Icon(Icons.email),
-                suffix: const SizedBox(),
-                hintText: "Enter an email for counter",
-                validatorFunction: (value){
-                  if(value == null || value.isEmpty){
-                    return "Field can not be empty";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              MyTextFieldSignIn(
-                controller: passwordController,
-                textInputType: TextInputType.text,
-                prefix: const Icon(Icons.lock),
-                suffix: _passwordVisibility(),
-                hintText: "Enter an password for counter",
-                isSecure: isSecure,
-                validatorFunction: (value){
-                  if(value == null || value.isEmpty){
-                    return "Field can not be empty";
-                  }
-                  else if(value.length < 8){
-                    return "Password less than 8";
-                  }
-                  return null;
-                },
-              ),
+                LocalDropDown(
+                    hintText: "Select Counter No",
+                    dropDownList: counterNoList,
+                    callBackFunction: _counterNoCallback
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                MyTextFieldSignIn(
+                  controller: emailController,
+                  textInputType: TextInputType.text,
+                  prefix: const Icon(Icons.email),
+                  suffix: const SizedBox(),
+                  hintText: "Enter an email for counter",
+                  validatorFunction: (value){
+                    if(value == null || value.isEmpty){
+                      return "Field can not be empty";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                MyTextFieldSignIn(
+                  controller: passwordController,
+                  textInputType: TextInputType.text,
+                  prefix: const Icon(Icons.lock),
+                  suffix: _passwordVisibility(),
+                  hintText: "Enter an password for counter",
+                  isSecure: isSecure,
+                  validatorFunction: (value){
+                    if(value == null || value.isEmpty){
+                      return "Field can not be empty";
+                    }
+                    else if(value.length < 8){
+                      return "Password less than 8";
+                    }
+                    return null;
+                  },
+                ),
 
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: () async{
-                        if (_formKey.currentState!.validate()) {
-                          dynamic result = await _auth.registerCounterWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), branchName, counterNo, MyTexts.counter) ;
-                          if(result == null){
-                            // setState(() {
-                            //   isLoading = false;
-                            // });
-                            CustomSnackBar(context: context, isSuccess: false, message: 'Please enter valid credentials!').show();
-                          }else{
-                            CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
-                            _clearFields();
-                            // setState(() {
-                            //   isLoading = false;
-                            // });
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: MaterialButton(
+                        onPressed: () async{
+                          if (_formKey.currentState!.validate()) {
+                            dynamic result = await _auth.registerCounterWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), branchName, counterNo, MyTexts.counter) ;
+                            if(result == null){
+                              // setState(() {
+                              //   isLoading = false;
+                              // });
+                              CustomSnackBar(context: context, isSuccess: false, message: 'Please enter valid credentials!').show();
+                            }else{
+                              CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
+                              _clearFields();
+                              // setState(() {
+                              //   isLoading = false;
+                              // });
 
+                            }
                           }
-                        }
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                      color: MyColors.customGreen,
-                      height: 40,
-                      elevation: 0,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(7),
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        color: MyColors.customGreen,
+                        height: 40,
+                        elevation: 0,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(7),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Icon(Icons.add_to_home_screen, color: Colors.white,),
+                            Text("Register",
+                              style: MyTextStyle.regularStyle(
+                                fontColor: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Icon(Icons.add_to_home_screen, color: Colors.white,),
-                          Text("Register",
-                            style: MyTextStyle.regularStyle(
-                              fontColor: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        //_clearTextField();
-                      },
-                      color: Colors.red,
-                      height: 40,
-                      elevation: 0,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(7),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          //_clearTextField();
+                        },
+                        color: Colors.red,
+                        height: 40,
+                        elevation: 0,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(7),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Icon(Icons.close, color: Colors.white,),
+                            Text("Cancel",
+                              style: MyTextStyle.regularStyle(
+                                fontColor: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Icon(Icons.close, color: Colors.white,),
-                          Text("Cancel",
-                            style: MyTextStyle.regularStyle(
-                              fontColor: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
