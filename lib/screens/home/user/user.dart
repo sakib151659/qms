@@ -6,7 +6,9 @@ import 'package:qms/services/database.dart';
 import '../../../components/appbar/appbar.dart';
 import '../../../components/custom_dropdown/custom_dropdown.dart';
 import '../../../components/custom_text_style/custom_text_style_class.dart';
+import '../../../models/user.dart';
 import '../../../services/auth.dart';
+import '../../../services/local_storage_manager.dart';
 import '../../../utils/colors_for_app.dart';
 import '../../../utils/texts_for_app.dart';
 import '../../wrapper.dart';
@@ -23,6 +25,8 @@ class _UserPageState extends State<UserPage> {
   List <String> counterNoList = [MyTexts.counter1,MyTexts.counter2, MyTexts.counter3];
   String branchName = "";
   String counterNo = "";
+  String currentUserEmail = "";
+  String uid = "";
   bool isCounterVisible =false;
   final _formKey = GlobalKey<FormState>();
   void _branchNameCallback(value) {
@@ -40,6 +44,48 @@ class _UserPageState extends State<UserPage> {
         counterNo = value.toString();
       });
     }
+  }
+  ////////////////////////////////////////
+  void _check() async {
+    String userUid = await LocalStorageManager.readData(MyTexts.uid);
+    if(userUid.isNotEmpty){
+      setState(() {
+        uid = userUid;
+      });
+    }else{
+      setState(() {
+        uid = MyTexts.na;
+      });
+    }
+    String userEmail = await LocalStorageManager.readData(MyTexts.email);
+    if(userEmail.isNotEmpty){
+      setState(() {
+        currentUserEmail = userEmail;
+      });
+    }else{
+      setState(() {
+        currentUserEmail = MyTexts.na;
+      });
+    }
+  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // Create an user object based on firebase user
+  CurrentUserModel? _userFromFirebaseUser(User user) {
+    return  CurrentUserModel (uid: user.uid);
+  }
+
+
+  // auth change user stream
+  Stream<CurrentUserModel?> get user{
+    return _auth.authStateChanges()
+        .map((User? user) => _userFromFirebaseUser(user!));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _check();
+    super.initState();
   }
 
   @override
@@ -243,7 +289,7 @@ class _UserPageState extends State<UserPage> {
                             //
                             // }
 
-                            //DatabaseService(uid: User().uid)
+                            await DatabaseService(uid: uid).setQueData(2, branchName, counterNo, currentUserEmail, MyTexts.requested);
                           }
                           Navigator.of(context, rootNavigator: true).pop();
                         },

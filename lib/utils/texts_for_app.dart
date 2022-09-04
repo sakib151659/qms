@@ -24,5 +24,9 @@ class MyTexts {
   static const String email = "email";
   static const String uid = "uid";
 
+  //constants
+  static const String requested = "Requested";
+  static const String approved = "Approved";
+
 
 }
