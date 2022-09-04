@@ -28,23 +28,24 @@ class DatabaseService {
   }
 
 
-//add Scammers information
+//request que table
 
-//   final CollectionReference scammerCollection = Firestore.instance.collection('scammer');
-//   Future setScammerData(String name ,String mobileNumber, String scamType,  String paidNumber, String email, String socialMedia, String description, String postDate , String postedBy) async {
-//     return await scammerCollection.document(uid).setData({
-//       'name' : name,
-//       'mobileNumber' : mobileNumber,
-//       'scamType' : scamType,
-//       'paidNumber' : paidNumber,
-//       'email' : email,
-//       'socialMedia' : socialMedia,
-//       'description' : description,
-//       'postDate' : postDate,
-//       'postedBy' : postedBy,
-//
-//     });
-//   }
+  final CollectionReference queCollection = FirebaseFirestore.instance.collection('queTable');
+  Future setQueData(
+      int slNo ,
+      String branchName,
+      String counterNumber,
+      String email,
+      String status
+      ) async {
+    return await queCollection.doc(uid).set({
+      'slNo' : slNo,
+      'branchName' : branchName,
+      'counterNumber' : counterNumber,
+      'email' : email,
+      'status' : status
+    });
+  }
 //
 //
 // //add Payment information

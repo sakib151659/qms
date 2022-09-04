@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qms/screens/home/user/que_list_page.dart';
+import 'package:qms/services/database.dart';
 
 import '../../../components/appbar/appbar.dart';
 import '../../../components/custom_dropdown/custom_dropdown.dart';
@@ -93,7 +95,7 @@ class _UserPageState extends State<UserPage> {
                           flex: 1,
                           child: _counterDesign(
                               branchName: branchName,
-                              counterNo: "Counter 1",
+                              counterNo: "Counter 2",
                               total: 20,
                               backgroundColor: MyColors.customPink),
                         ),
@@ -102,7 +104,7 @@ class _UserPageState extends State<UserPage> {
                           flex: 1,
                           child: _counterDesign(
                               branchName: branchName,
-                              counterNo: "Counter 1",
+                              counterNo: "Counter 3",
                               total: 20,
                               backgroundColor: MyColors.customYellow),
                         ),
@@ -240,6 +242,8 @@ class _UserPageState extends State<UserPage> {
                             //   // });
                             //
                             // }
+
+                            //DatabaseService(uid: User().uid)
                           }
                           Navigator.of(context, rootNavigator: true).pop();
                         },
