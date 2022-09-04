@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qms/screens/home/user/que_list_page.dart';
@@ -6,6 +7,7 @@ import 'package:qms/services/database.dart';
 import '../../../components/appbar/appbar.dart';
 import '../../../components/custom_dropdown/custom_dropdown.dart';
 import '../../../components/custom_text_style/custom_text_style_class.dart';
+import '../../../components/loading_screen/custom_loading.dart';
 import '../../../models/user.dart';
 import '../../../services/auth.dart';
 import '../../../services/local_storage_manager.dart';
@@ -23,8 +25,11 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   List <String> branchNameList = [MyTexts.branchA, MyTexts.branchB, MyTexts.branchC];
   List <String> counterNoList = [MyTexts.counter1,MyTexts.counter2, MyTexts.counter3];
+  CollectionReference queRef = FirebaseFirestore.instance.collection("queTable");
   String branchName = "";
   String counterNo = "";
+  String requestedBranchName = "";
+  String requestedCounterNo = "";
   String currentUserEmail = "";
   String uid = "";
   bool isCounterVisible =false;
@@ -47,10 +52,22 @@ class _UserPageState extends State<UserPage> {
   }
   ////////////////////////////////////////
   void _check() async {
-    String userUid = await LocalStorageManager.readData(MyTexts.uid);
-    if(userUid.isNotEmpty){
+    final User? user = _auth.currentUser;
+    final userid = user!.uid;
+    // String userUid = await LocalStorageManager.readData(MyTexts.uid);
+    // if(userUid.isNotEmpty){
+    //   setState(() {
+    //     uid = userUid;
+    //   });
+    // }else{
+    //   setState(() {
+    //     uid = MyTexts.na;
+    //   });
+    // }
+
+    if(userid.isNotEmpty){
       setState(() {
-        uid = userUid;
+        uid = userid;
       });
     }else{
       setState(() {
@@ -68,18 +85,19 @@ class _UserPageState extends State<UserPage> {
       });
     }
   }
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  // Create an user object based on firebase user
-  CurrentUserModel? _userFromFirebaseUser(User user) {
-    return  CurrentUserModel (uid: user.uid);
-  }
+   final FirebaseAuth _auth = FirebaseAuth.instance;
+  // // Create an user object based on firebase user
+  // CurrentUserModel? _userFromFirebaseUser(User user) {
+  //   return  CurrentUserModel (uid: user.uid);
+  // }
+  //
+  //
+  // // auth change user stream
+  // Stream<CurrentUserModel?> get user{
+  //   return _auth.authStateChanges()
+  //       .map((User? user) => _userFromFirebaseUser(user!));
+  // }
 
-
-  // auth change user stream
-  Stream<CurrentUserModel?> get user{
-    return _auth.authStateChanges()
-        .map((User? user) => _userFromFirebaseUser(user!));
-  }
 
   @override
   void initState() {
@@ -95,86 +113,31 @@ class _UserPageState extends State<UserPage> {
       appBar: CustomAppbar.getAppBar(context, "User Panel"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Text("QMS",
-              style: MyTextStyle.regularStyle4(
-                  fontColor: MyColors.primaryTextColor,
-                  fontSize: 50,
-                  fontWeight: FontWeight.w600
-              ),),
-            Text("Que Management System",
-              style: MyTextStyle.regularStyle4(
-                  fontColor: MyColors.primaryTextColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600
-              ),),
-            const SizedBox(height: 20,),
-            LocalDropDown(
-                hintText: "Select Branch Name",
-                dropDownList: branchNameList,
-                callBackFunction: _branchNameCallback
-            ),
-            const SizedBox(
-              height: 15,
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 15,
+              ),
+              Text("QMS",
+                style: MyTextStyle.regularStyle4(
+                    fontColor: MyColors.primaryTextColor,
+                    fontSize: 50,
+                    fontWeight: FontWeight.w600
+                ),),
+              Text("Que Management System",
+                style: MyTextStyle.regularStyle4(
+                    fontColor: MyColors.primaryTextColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600
+                ),),
+              const SizedBox(height: 20,),
+              _requestForQue(),
+              _queDataShow(),
 
-            Visibility(
-              visible: isCounterVisible,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex:1,
-                          child: _counterDesign(
-                              branchName: branchName,
-                              counterNo: "Counter 1",
-                              total: 20,
-                              backgroundColor: MyColors.customCyan),
-                        ),
 
-                        Expanded(
-                          flex: 1,
-                          child: _counterDesign(
-                              branchName: branchName,
-                              counterNo: "Counter 2",
-                              total: 20,
-                              backgroundColor: MyColors.customPink),
-                        ),
-
-                        Expanded(
-                          flex: 1,
-                          child: _counterDesign(
-                              branchName: branchName,
-                              counterNo: "Counter 3",
-                              total: 20,
-                              backgroundColor: MyColors.customYellow),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10,),
-                    MaterialButton(
-                      onPressed: (){
-                        _addCounter();
-                      },
-                      color: MyColors.customGreen,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.person_add, color: Colors.white,),
-                          const SizedBox(width: 10,),
-                          Text("Request for que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
-                        ],),
-                    ),
-                  ],
-                )
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -351,6 +314,179 @@ class _UserPageState extends State<UserPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _stattusCard({required String branchAndCounter, required String status}){
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: MyColors.customOrange,
+        borderRadius: BorderRadius.circular(7),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            offset: Offset(0.0, 1.0), //(x,y)
+            blurRadius: 2.0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text("Requested for $branchAndCounter"),
+          Text("Status : $status"),
+
+        ],
+      ),
+    );
+  }
+
+
+
+
+  // screen switch widgets
+  Widget _requestForQue(){
+    return Column(
+      children: [
+        LocalDropDown(
+            hintText: "Select Branch Name",
+            dropDownList: branchNameList,
+            callBackFunction: _branchNameCallback
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+
+        Visibility(
+            visible: isCounterVisible,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex:1,
+                      child: _counterDesign(
+                          branchName: branchName,
+                          counterNo: "Counter 1",
+                          total: 20,
+                          backgroundColor: MyColors.customCyan),
+                    ),
+
+                    Expanded(
+                      flex: 1,
+                      child: _counterDesign(
+                          branchName: branchName,
+                          counterNo: "Counter 2",
+                          total: 20,
+                          backgroundColor: MyColors.customPink),
+                    ),
+
+                    Expanded(
+                      flex: 1,
+                      child: _counterDesign(
+                          branchName: branchName,
+                          counterNo: "Counter 3",
+                          total: 20,
+                          backgroundColor: MyColors.customYellow),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10,),
+                MaterialButton(
+                  onPressed: (){
+                    _addCounter();
+                  },
+                  color: MyColors.customGreen,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.person_add, color: Colors.white,),
+                      const SizedBox(width: 10,),
+                      Text("Request for que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
+                    ],),
+                ),
+
+              ],
+            )
+        ),
+      ],
+    );
+  }
+
+
+
+  Widget _queDataShow(){
+    return Column(
+      children: [
+        StreamBuilder(
+            stream: queRef.where(MyTexts.email, isEqualTo: currentUserEmail).snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if(!snapshot.hasData){
+                //print(snapshot.data.documents.toString());
+
+                return const SizedBox();
+
+              }else if(snapshot.hasData){
+                requestedBranchName = snapshot.data!.docs[0]["branchName"].toString();
+                requestedCounterNo = snapshot.data!.docs[0]["counterNumber"].toString();
+                return  _stattusCard(
+                    branchAndCounter: snapshot.data!.docs[0]["branchName"].toString()+" , "+snapshot.data!.docs[0]["counterNumber"].toString(),
+                    status: snapshot.data!.docs[0]["status"].toString()
+                );
+
+              }
+              return  const SizedBox();
+
+            }
+        ),
+
+        SizedBox(
+          height: 200,
+          child: StreamBuilder(
+              stream: queRef.where("status", isEqualTo: MyTexts.requested)
+                  .where("branchName", isEqualTo: requestedBranchName)
+                  .where("counterNumber", isEqualTo: requestedCounterNo)
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if(!snapshot.hasData){
+                  //print(snapshot.data.documents.toString());
+
+                  return const SizedBox();
+
+                }
+                return  ListView(
+                  children: snapshot.data!.docs.map((document){
+                    return Card(
+                      color: Colors.black54,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
+                            title: Text('\n'+document['email'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                )),
+                            subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  //fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  letterSpacing: 2,
+                                )),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+          ),
+        )
+      ],
     );
   }
 }
