@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:qms/components/snackbar/custom_snackbar.dart';
 import 'package:qms/screens/home/user/que_list_page.dart';
 import 'package:qms/services/database.dart';
 
@@ -30,9 +33,12 @@ class _UserPageState extends State<UserPage> {
   String counterNo = "";
   String requestedBranchName = "";
   String requestedCounterNo = "";
+  String requestedBranchNameValue = "";
+  String requestedCounterNoValue = "";
   String currentUserEmail = "";
   String uid = "";
   bool isCounterVisible =false;
+  bool showExistedQueData = false;
   final _formKey = GlobalKey<FormState>();
   void _branchNameCallback(value) {
     if (value != null) {
@@ -98,11 +104,29 @@ class _UserPageState extends State<UserPage> {
   //       .map((User? user) => _userFromFirebaseUser(user!));
   // }
 
+  /////////////////////////
+  void hasData(){
+    FirebaseFirestore.instance
+        .collection('queTable')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('Document exists on the database');
+        print(uid);
+        setState(() {
+          showExistedQueData = true;
+        });
+      }
+    });
+  }
+
 
   @override
   void initState() {
     // TODO: implement initState
     _check();
+    hasData();
     super.initState();
   }
 
@@ -132,8 +156,9 @@ class _UserPageState extends State<UserPage> {
                     fontWeight: FontWeight.w600
                 ),),
               const SizedBox(height: 20,),
+              showExistedQueData?_queDataShow():
               _requestForQue(),
-              _queDataShow(),
+
 
 
             ],
@@ -255,6 +280,7 @@ class _UserPageState extends State<UserPage> {
                             await DatabaseService(uid: uid).setQueData(2, branchName, counterNo, currentUserEmail, MyTexts.requested);
                           }
                           Navigator.of(context, rootNavigator: true).pop();
+                          hasData();
                         },
                         color: MyColors.customGreen,
                         height: 40,
@@ -317,7 +343,7 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  Widget _stattusCard({required String branchAndCounter, required String status}){
+  Widget _stattusCard({required String branchAndCounter, required String status , required int slNo}){
     return Container(
       padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -336,7 +362,7 @@ class _UserPageState extends State<UserPage> {
         children: [
           Text("Requested for $branchAndCounter"),
           Text("Status : $status"),
-
+          Text("Serial NO : "+slNo.toString()),
         ],
       ),
     );
@@ -433,7 +459,8 @@ class _UserPageState extends State<UserPage> {
                 requestedCounterNo = snapshot.data!.docs[0]["counterNumber"].toString();
                 return  _stattusCard(
                     branchAndCounter: snapshot.data!.docs[0]["branchName"].toString()+" , "+snapshot.data!.docs[0]["counterNumber"].toString(),
-                    status: snapshot.data!.docs[0]["status"].toString()
+                    status: snapshot.data!.docs[0]["status"].toString(),
+                    slNo: snapshot.data!.docs[0]["slNo"]
                 );
 
               }
@@ -442,16 +469,35 @@ class _UserPageState extends State<UserPage> {
             }
         ),
 
+        MaterialButton(
+          onPressed: (){
+           setState(() {
+             requestedBranchNameValue = requestedBranchName;
+             requestedCounterNoValue = requestedCounterNo;
+           });
+          },
+          color: MyColors.customGreen,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.person, color: Colors.white,),
+              const SizedBox(width: 10,),
+              Text("See Que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
+            ],),
+        ),
+
         SizedBox(
-          height: 200,
+          height: MediaQuery.of(context).size.height*70,
           child: StreamBuilder(
-              stream: queRef.where("status", isEqualTo: MyTexts.requested)
-                  .where("branchName", isEqualTo: requestedBranchName)
-                  .where("counterNumber", isEqualTo: requestedCounterNo)
+              stream: queRef.where("status", isEqualTo: MyTexts.approved)
+                  .where("branchName", isEqualTo: requestedBranchNameValue)
+                  .where("counterNumber", isEqualTo: requestedCounterNoValue)
+                  //.orderBy('slNo')
                   .snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if(!snapshot.hasData){
                   //print(snapshot.data.documents.toString());
+                 // CustomSnackBar(context: context, message: "Wait until approved", isSuccess: false).show();
 
                   return const SizedBox();
 
@@ -476,6 +522,12 @@ class _UserPageState extends State<UserPage> {
                                   //fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                   letterSpacing: 2,
+                                )),
+                            trailing: Text('Serial: '+document['slNo'].toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 )),
                           ),
                         ],
