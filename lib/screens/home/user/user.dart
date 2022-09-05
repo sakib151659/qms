@@ -40,6 +40,7 @@ class _UserPageState extends State<UserPage> {
   int queLength = 0;
   bool isCounterVisible =false;
   bool showExistedQueData = false;
+  bool showQue = false;
   final _formKey = GlobalKey<FormState>();
   void _branchNameCallback(value) {
     if (value != null) {
@@ -484,6 +485,7 @@ class _UserPageState extends State<UserPage> {
            setState(() {
              requestedBranchNameValue = requestedBranchName;
              requestedCounterNoValue = requestedCounterNo;
+             showQue = true;
            });
           },
           color: MyColors.customGreen,
@@ -496,58 +498,62 @@ class _UserPageState extends State<UserPage> {
             ],),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: Image.asset("assets/images/counter.png"),
-        ),
-        //Image.asset('assets/images/lake.jpg'),
+        Visibility(
+          visible: showQue,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                child: Image.asset("assets/images/counter.png"),
+              ),
+              //Image.asset('assets/images/lake.jpg'),
 
-        SizedBox(
-          height: MediaQuery.of(context).size.height*.70,
-          child: StreamBuilder(
-              stream: queRef.where("status", isEqualTo: MyTexts.approved)
-                  .where("branchName", isEqualTo: requestedBranchNameValue)
-                  .where("counterNumber", isEqualTo: requestedCounterNoValue)
-                  //.orderBy('slNo')
-                  .snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if(!snapshot.hasData){
-                  //print(snapshot.data.documents.toString());
-                 // CustomSnackBar(context: context, message: "Wait until approved", isSuccess: false).show();
+              SizedBox(
+                height: MediaQuery.of(context).size.height*.70,
+                child: StreamBuilder(
+                    stream: queRef.where("status", isEqualTo: MyTexts.approved)
+                        .where("branchName", isEqualTo: requestedBranchNameValue)
+                        .where("counterNumber", isEqualTo: requestedCounterNoValue)
+                        //.orderBy('slNo')
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if(!snapshot.hasData){
+                        //print(snapshot.data.documents.toString());
+                       // CustomSnackBar(context: context, message: "Wait until approved", isSuccess: false).show();
 
-                  return const SizedBox();
+                        return const SizedBox();
 
-                }
-                return  ListView(
-                  children: snapshot.data!.docs.map((document){
-                    return Container(
-                      width: MediaQuery.of(context).size.width*.20,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          document['email']==currentUserEmail?
-                          Image.asset("assets/images/me_person.png", height: 70, width: 105,):
-                          Image.asset("assets/images/single_person.png", height: 70, width: 105,),
+                      }
+                      return  ListView(
+                        children: snapshot.data!.docs.map((document){
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              document['email']==currentUserEmail?
+                              Image.asset("assets/images/me_person.png", height: 70, width: 105,):
+                              Image.asset("assets/images/single_person.png", height: 70, width: 105,),
 
-                          document['email']==currentUserEmail?
-                          Text('      You ( '+document['slNo'].toString()+" )",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              )):
-                          Text('Serial No: '+document['slNo'].toString(),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              )),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                );
-              }
+                              document['email']==currentUserEmail?
+                              Text('      You ( '+document['slNo'].toString()+" )",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  )):
+                              Text('Serial No: '+document['slNo'].toString(),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  )),
+                            ],
+                          );
+                        }).toList(),
+                      );
+                    }
+                ),
+              ),
+            ],
           ),
         )
       ],
