@@ -180,28 +180,48 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget _counterDesign({required String branchName, required String counterNo, required int total, required Color backgroundColor}){
-    return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(7),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            offset: Offset(0.0, 1.0), //(x,y)
-            blurRadius: 2.0,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(branchName),
-          Text(counterNo),
-          Text("Total : "+total.toString()),
+    return StreamBuilder(
+        stream: queRef.where(MyTexts.branchName, isEqualTo: branchName)
+            .where(MyTexts.counterNumber, isEqualTo: counterNo)
+            .where(MyTexts.status, isEqualTo: MyTexts.approved)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if(!snapshot.hasData){
+            //print(snapshot.data.documents.toString());
 
-        ],
-      ),
+            return const SizedBox();
+
+          }else if(snapshot.hasData){
+            //requestedBranchName = snapshot.data!.docs[0]["branchName"].toString();
+            //requestedCounterNo = snapshot.data!.docs[0]["counterNumber"].toString();
+            return  Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(7),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 2.0,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(branchName),
+                  Text(counterNo),
+                  Text("Total : "+snapshot.data!.docs.length.toString()),
+
+                ],
+              ),
+            );
+
+          }
+          return  const SizedBox();
+
+        }
     );
   }
 
@@ -273,21 +293,6 @@ class _UserPageState extends State<UserPage> {
                       child: MaterialButton(
                         onPressed: () async{
                           if (_formKey.currentState!.validate()) {
-                            // dynamic result = await _auth.registerCounterWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim(), branchName, counterNo, MyTexts.counter) ;
-                            // if(result == null){
-                            //   // setState(() {
-                            //   //   isLoading = false;
-                            //   // });
-                            //   CustomSnackBar(context: context, isSuccess: false, message: 'Please enter valid credentials!').show();
-                            // }else{
-                            //   CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
-                            //   _clearFields();
-                            //   // setState(() {
-                            //   //   isLoading = false;
-                            //   // });
-                            //
-                            // }
-
                             await DatabaseService(uid: uid).setQueData(queLength+1, branchName, counterNo, currentUserEmail, MyTexts.requested);
                           }
                           Navigator.of(context, rootNavigator: true).pop();
@@ -494,7 +499,7 @@ class _UserPageState extends State<UserPage> {
             children: [
               const Icon(Icons.person, color: Colors.white,),
               const SizedBox(width: 10,),
-              Text("See Que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
+              Text("View Que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
             ],),
         ),
 
@@ -524,7 +529,13 @@ class _UserPageState extends State<UserPage> {
                         return const SizedBox();
 
                       }
-                      return  ListView(
+                      return  snapshot.data!.docs.isEmpty? Column(
+                        children: const [
+                          SizedBox(height: 30,),
+                          Text("No one in the que"),
+                        ],
+                      ):
+                      ListView(
                         children: snapshot.data!.docs.map((document){
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
