@@ -145,10 +145,12 @@ class _SignUpState extends State<SignUp> {
 
                         CustomSnackBar(context: context, isSuccess: false, message: 'Please enter a valid email!').show();
                       }else{
-                        CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully!').show();
+                        CustomSnackBar(context: context, isSuccess: true, message: 'Registered successfully! Sign in to continue!').show();
+                        widget.toggleView();
                         setState(() {
                           isLoading = false;
                         });
+
                       }
                     }
 

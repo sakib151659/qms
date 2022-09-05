@@ -37,6 +37,7 @@ class _UserPageState extends State<UserPage> {
   String requestedCounterNoValue = "";
   String currentUserEmail = "";
   String uid = "";
+  int queLength = 0;
   bool isCounterVisible =false;
   bool showExistedQueData = false;
   final _formKey = GlobalKey<FormState>();
@@ -121,12 +122,21 @@ class _UserPageState extends State<UserPage> {
     });
   }
 
+  void getQueLength()async{
+    final QuerySnapshot qSnap = await FirebaseFirestore.instance.collection('queTable').get();
+    final int documents = qSnap.docs.length;
+    setState(() {
+      queLength = documents;
+    });
+  }
+
 
   @override
   void initState() {
     // TODO: implement initState
     _check();
     hasData();
+    getQueLength();
     super.initState();
   }
 
@@ -277,7 +287,7 @@ class _UserPageState extends State<UserPage> {
                             //
                             // }
 
-                            await DatabaseService(uid: uid).setQueData(2, branchName, counterNo, currentUserEmail, MyTexts.requested);
+                            await DatabaseService(uid: uid).setQueData(queLength+1, branchName, counterNo, currentUserEmail, MyTexts.requested);
                           }
                           Navigator.of(context, rootNavigator: true).pop();
                           hasData();
