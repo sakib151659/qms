@@ -496,8 +496,14 @@ class _UserPageState extends State<UserPage> {
             ],),
         ),
 
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Image.asset("assets/images/counter.png"),
+        ),
+        //Image.asset('assets/images/lake.jpg'),
+
         SizedBox(
-          height: MediaQuery.of(context).size.height*70,
+          height: MediaQuery.of(context).size.height*.70,
           child: StreamBuilder(
               stream: queRef.where("status", isEqualTo: MyTexts.approved)
                   .where("branchName", isEqualTo: requestedBranchNameValue)
@@ -514,32 +520,28 @@ class _UserPageState extends State<UserPage> {
                 }
                 return  ListView(
                   children: snapshot.data!.docs.map((document){
-                    return Card(
-                      color: Colors.black54,
-                      child: Column(
+                    return Container(
+                      width: MediaQuery.of(context).size.width*.20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ListTile(
-                            leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
-                            title: Text('\n'+document['email'],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                )),
-                            subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  //fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  letterSpacing: 2,
-                                )),
-                            trailing: Text('Serial: '+document['slNo'].toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                )),
-                          ),
+                          document['email']==currentUserEmail?
+                          Image.asset("assets/images/me_person.png", height: 70, width: 105,):
+                          Image.asset("assets/images/single_person.png", height: 70, width: 105,),
+
+                          document['email']==currentUserEmail?
+                          Text('      You ( '+document['slNo'].toString()+" )",
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              )):
+                          Text('Serial No: '+document['slNo'].toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              )),
                         ],
                       ),
                     );
