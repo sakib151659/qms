@@ -1,22 +1,14 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qms/components/snackbar/custom_snackbar.dart';
-import 'package:qms/screens/home/user/que_list_page.dart';
 import 'package:qms/services/database.dart';
-
 import '../../../components/appbar/appbar.dart';
 import '../../../components/custom_dropdown/custom_dropdown.dart';
 import '../../../components/custom_text_style/custom_text_style_class.dart';
-import '../../../components/loading_screen/custom_loading.dart';
-import '../../../models/user.dart';
-import '../../../services/auth.dart';
 import '../../../services/local_storage_manager.dart';
 import '../../../utils/colors_for_app.dart';
 import '../../../utils/texts_for_app.dart';
-import '../../wrapper.dart';
+
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
