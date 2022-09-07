@@ -16,5 +16,9 @@ class MyColors {
   static const Color customPink = Color.fromRGBO(250, 200, 210, 1);
   static const Color customYellow = Color.fromRGBO(255, 247, 23, 0.76);
   static const Color docBackColor = Color.fromRGBO(196, 216, 0, 1);
+  static const Color editIconBG = Color.fromRGBO(234, 244, 240, 1);
+  static const Color editIcon = Color.fromRGBO(38, 142, 94, 1);
+  static const Color deleteBackground = Color.fromRGBO(255, 241, 242, 1);
+  static const Color deleteIcon = Color.fromRGBO(231, 120, 132, 1);
 
 }

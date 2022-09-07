@@ -142,13 +142,30 @@ class _CounterPageState extends State<CounterPage> {
                 ],
               ),
 
+              const SizedBox(height: 20,),
+
               isRequestedSelected?
               SizedBox(
-                height: 300,
-                  child: UserListScreen(branchName: counterOfficerBranchName, counterNumber: counterOfficerCounterNumber, status: MyTexts.requested,)):
+                height: MediaQuery.of(context).size.height*.65,
+                  child: UserListScreen(
+                    branchName: counterOfficerBranchName,
+                    counterNumber: counterOfficerCounterNumber,
+                    status: MyTexts.requested,
+                    buttonTitle: "Approve",
+                    acceptFunction: (){},
+                    rejectFunction: (){},
+                  )):
               SizedBox(
-                height: 300,
-                  child: UserListScreen(branchName: counterOfficerBranchName, counterNumber: counterOfficerCounterNumber, status: MyTexts.approved,)),
+                height: MediaQuery.of(context).size.height*.65,
+                  child: UserListScreen(
+                    branchName: counterOfficerBranchName,
+                    counterNumber: counterOfficerCounterNumber,
+                    status: MyTexts.approved,
+                    buttonTitle: "Complete",
+                    acceptFunction: (){},
+                    rejectFunction: (){},
+
+                  )),
 
             ],
           ),
