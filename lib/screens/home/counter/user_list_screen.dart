@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qms/services/database.dart';
 
 import '../../../components/custom_text_style/custom_text_style_class.dart';
 import '../../../components/loading_screen/custom_loading.dart';
@@ -12,17 +13,13 @@ class UserListScreen extends StatefulWidget {
   final String counterNumber;
   final String status;
   final String buttonTitle;
-  final Function() acceptFunction;
-  final Function() rejectFunction;
-
+  final String updateButtonStatus;
   const UserListScreen({Key? key,
     required this.branchName,
     required this.counterNumber,
     required this.status,
     required this.buttonTitle,
-    required this.acceptFunction,
-    required this.rejectFunction
-
+    required this.updateButtonStatus,
   }) : super(key: key);
 
   @override
@@ -31,6 +28,8 @@ class UserListScreen extends StatefulWidget {
 
 class _UserListScreenState extends State<UserListScreen> {
   CollectionReference regRef = FirebaseFirestore.instance.collection("queTable");
+  final CollectionReference collectionReference = FirebaseFirestore.instance.collection('queTable');
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -48,6 +47,8 @@ class _UserListScreenState extends State<UserListScreen> {
           }
           return  ListView(
             children: snapshot.data!.docs.map((document){
+              //final DocumentSnapshot documentSnapshot = snapshot.data!.docs[index];
+              //index++;
               return Container(
                 padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -81,11 +82,18 @@ class _UserListScreenState extends State<UserListScreen> {
                           //letterSpacing: 2,
                         )),
                     const SizedBox(height: 5,),
+                    Text("Serial No : "+document['slNo'].toString(),
+                        style: const TextStyle(
+                          color: MyColors.primaryTextColor,
+                          //fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        )),
+                    const SizedBox(height: 5,),
                     Text("Status : "+document['status'],
                         style: const TextStyle(
                           color: MyColors.primaryTextColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          //fontWeight: FontWeight.w600,
+                          fontSize: 15,
                         )),
                     const Divider(),
                     Row(
@@ -103,7 +111,13 @@ class _UserListScreenState extends State<UserListScreen> {
                                 Text(widget.buttonTitle, style: MyTextStyle.regularStyle(fontSize: 12),),
                               ],
                             ),
-                            onPressed: widget.acceptFunction,
+                            onPressed: ()async{
+                              widget.updateButtonStatus==MyTexts.complete ? collectionReference.doc(document.id).delete():
+                              collectionReference.doc(document.id).update({
+                                'status': widget.updateButtonStatus
+                              });
+
+                            },
                           ),
                         ),
 
@@ -112,7 +126,9 @@ class _UserListScreenState extends State<UserListScreen> {
                           height: 25, width: 100,
                           child: MaterialButton(
                             color:MyColors.deleteBackground,
-                            onPressed: widget.rejectFunction,
+                            onPressed: (){
+                              collectionReference.doc(document.id).delete();
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

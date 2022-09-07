@@ -69,11 +69,10 @@ class _AdminState extends State<Admin> {
       appBar: CustomAppbar.getAppBar(context, "Admin Panel"),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Column(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Column(
                 children: [
                   const SizedBox(height: 15,),
                   Text("QMS",
@@ -105,82 +104,84 @@ class _AdminState extends State<Admin> {
                   const SizedBox(height: 20,),
                 ],
               ),
-            ),
 
-            
-            // StreamBuilder(
-            //   stream: regRef.snapshots(),
-            //     builder: (context, snapshot){
-            //     if(snapshot.hasError){
-            //       return Text("Error");
-            //      }
-            //     if(snapshot.hasData){
-            //       return ListView.builder(
-            //         itemCount: snapshot.data.toString().length,
-            //           itemBuilder: (context, index){
-            //           DocumentSnapshot doc = snapshot.data!.;
-            //           return Text("${snapshot.data!.d}");
-            //           });
-            //        }
-            //     return Text("loading");
-            //     }
-            //
-            // ),
 
-            Text("All Counters",
-              style: MyTextStyle.regularStyle4(
-                  fontColor: MyColors.primaryTextColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600
-              ),),
+              // StreamBuilder(
+              //   stream: regRef.snapshots(),
+              //     builder: (context, snapshot){
+              //     if(snapshot.hasError){
+              //       return Text("Error");
+              //      }
+              //     if(snapshot.hasData){
+              //       return ListView.builder(
+              //         itemCount: snapshot.data.toString().length,
+              //           itemBuilder: (context, index){
+              //           DocumentSnapshot doc = snapshot.data!.;
+              //           return Text("${snapshot.data!.d}");
+              //           });
+              //        }
+              //     return Text("loading");
+              //     }
+              //
+              // ),
 
-            const SizedBox(height: 10,),
-            Expanded(
-              flex: 10,
-              child: StreamBuilder(
-                  stream: regRef.snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if(!snapshot.hasData){
-                      //print(snapshot.data.documents.toString());
+              Text("All Counters",
+                style: MyTextStyle.regularStyle4(
+                    fontColor: MyColors.primaryTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600
+                ),),
 
-                      return const CustomLoading();
+              const SizedBox(height: 10,),
+              SizedBox(
+                height: MediaQuery.of(context).size.height*.57,
+                child: StreamBuilder(
+                    stream: regRef.snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if(!snapshot.hasData){
+                        //print(snapshot.data.documents.toString());
 
+                        return const CustomLoading();
+
+                      }
+                      return  ListView(
+                        children: snapshot.data!.docs.map((document){
+                          return Card(
+                            color: Colors.white,
+                            elevation: 2,
+                            margin:const EdgeInsets.symmetric(vertical: 7),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
+                                  title: Text('\n'+document['email'],
+                                      style: const TextStyle(
+                                        color: MyColors.primaryTextColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      )),
+                                  subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
+                                      style: const TextStyle(
+                                        color: MyColors.primaryTextColor,
+                                        //fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        letterSpacing: 2,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      );
                     }
-                    return  ListView(
-                      children: snapshot.data!.docs.map((document){
-                        return Card(
-                          color: Colors.black54,
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
-                                title: Text('\n'+document['email'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    )),
-                                subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      //fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      letterSpacing: 2,
-                                    )),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }
-              ),
-            )
+                ),
+              )
 
 
 
-            
-          ],
+
+            ],
+          ),
         ),
       ),
     );

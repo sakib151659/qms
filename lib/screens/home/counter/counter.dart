@@ -76,6 +76,12 @@ class _CounterPageState extends State<CounterPage> {
                     fontSize: 15,
                     fontWeight: FontWeight.w600
                 ),),
+              Text(counterOfficerBranchName +" , "+counterOfficerCounterNumber,
+                style: MyTextStyle.regularStyle4(
+                    fontColor: MyColors.primaryTextColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600
+                ),),
               const SizedBox(height: 20,),
 
 
@@ -152,8 +158,7 @@ class _CounterPageState extends State<CounterPage> {
                     counterNumber: counterOfficerCounterNumber,
                     status: MyTexts.requested,
                     buttonTitle: "Approve",
-                    acceptFunction: (){},
-                    rejectFunction: (){},
+                    updateButtonStatus: MyTexts.approved,
                   )):
               SizedBox(
                 height: MediaQuery.of(context).size.height*.65,
@@ -162,9 +167,7 @@ class _CounterPageState extends State<CounterPage> {
                     counterNumber: counterOfficerCounterNumber,
                     status: MyTexts.approved,
                     buttonTitle: "Complete",
-                    acceptFunction: (){},
-                    rejectFunction: (){},
-
+                    updateButtonStatus: MyTexts.complete,
                   )),
 
             ],

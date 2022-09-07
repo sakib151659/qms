@@ -28,6 +28,8 @@ class MyTexts {
   static const String requested = "Requested";
   static const String approved = "Approved";
   static const String status = "status";
+  static const String complete = "Complete";
+
 
 
 }
