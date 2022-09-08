@@ -179,7 +179,7 @@ class _UserPageState extends State<UserPage> {
                 children: [
                   Text(branchName),
                   Text(counterNo),
-                  Text("Total : "+snapshot.data!.docs.length.toString()),
+                  Text("In Que : "+snapshot.data!.docs.length.toString()),
 
                 ],
               ),

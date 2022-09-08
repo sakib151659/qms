@@ -10,8 +10,6 @@ class CustomAppbar{
 static getAppBar(BuildContext context, String title) {
 
   return AppBar(
-    //backwardsCompatibility: false,
-    //systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: Colors.white),
     automaticallyImplyLeading:false,
     backgroundColor: MyColors.secondaryColor,
     elevation: 1,
@@ -29,7 +27,7 @@ static getAppBar(BuildContext context, String title) {
           label: const Text("Logout", style: TextStyle(color: Colors.white),)
       )
     ],
-    title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 22),),
+    title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 18),),
 
   );
  }
