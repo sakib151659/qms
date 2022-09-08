@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:qms/components/snackbar/custom_snackbar.dart';
 import 'package:qms/services/database.dart';
 
 import '../../../components/custom_text_style/custom_text_style_class.dart';
@@ -112,7 +115,7 @@ class _UserListScreenState extends State<UserListScreen> {
                               ],
                             ),
                             onPressed: ()async{
-                              widget.updateButtonStatus==MyTexts.complete ? collectionReference.doc(document.id).delete():
+                              widget.updateButtonStatus==MyTexts.complete ? await collectionReference.doc(document.id).delete():
                               collectionReference.doc(document.id).update({
                                 'status': widget.updateButtonStatus
                               });
@@ -126,8 +129,12 @@ class _UserListScreenState extends State<UserListScreen> {
                           height: 25, width: 100,
                           child: MaterialButton(
                             color:MyColors.deleteBackground,
-                            onPressed: (){
-                              collectionReference.doc(document.id).delete();
+                            onPressed: ()async{
+                              try{
+                                await collectionReference.doc(document.id).delete();
+                              }catch(e){
+                                CustomSnackBar(context: context, message: e.toString(), isSuccess: false).show();
+                              }
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
