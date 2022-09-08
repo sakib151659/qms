@@ -1,6 +1,4 @@
 class MyTexts {
-  static const String kalpurushFont = "kalpurush";
-  static const String solaimanFont = "SolaimanLipi";
   static const String signIn = "Sign In";
   static const String signUp = "Sign Up";
   static const String na = "N/A";
@@ -17,7 +15,6 @@ class MyTexts {
   static const String branchName = "branchName";
   static const String counterNumber = "counterNumber";
   static const String designation = "designation";
-
 
 
   //constants for shared preference
