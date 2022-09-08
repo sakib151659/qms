@@ -129,23 +129,23 @@ class _AdminState extends State<Admin> {
                           return Card(
                             color: Colors.white,
                             elevation: 2,
-                            margin:const EdgeInsets.symmetric(vertical: 7),
+                            margin:const EdgeInsets.symmetric(vertical: 7,horizontal: 3),
                             child: Column(
                               children: [
                                 ListTile(
                                   leading:const Icon(Icons.person, size: 30, color: MyColors.customOrange,),
-                                  title: Text('\n'+document['email'],
+                                  title: Text(document['email'],
                                       style: const TextStyle(
                                         color: MyColors.primaryTextColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
                                       )),
-                                  subtitle: Text('\n'+document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString()+'\n',
+                                  subtitle: Text(document[MyTexts.branchName].toString() +' , ' + document[MyTexts.counterNumber].toString(),
                                       style: const TextStyle(
                                         color: MyColors.primaryTextColor,
                                         //fontWeight: FontWeight.bold,
                                         fontSize: 15,
-                                        letterSpacing: 2,
+                                        letterSpacing: 1,
                                       )),
                                 ),
                               ],
