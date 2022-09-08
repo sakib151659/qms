@@ -20,7 +20,7 @@ static getAppBar(BuildContext context, String title) {
       TextButton.icon(
           onPressed: () async {
             await AuthService().signOut();
-            Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context)=>Wrapper())) ;
+            Navigator.of(context, rootNavigator: true).pushReplacement(MaterialPageRoute(builder: (context)=>Wrapper())) ;
           },
           icon: const Icon(
             Icons.logout,

@@ -54,17 +54,6 @@ class _UserPageState extends State<UserPage> {
   void _check() async {
     final User? user = _auth.currentUser;
     final userid = user!.uid;
-    // String userUid = await LocalStorageManager.readData(MyTexts.uid);
-    // if(userUid.isNotEmpty){
-    //   setState(() {
-    //     uid = userUid;
-    //   });
-    // }else{
-    //   setState(() {
-    //     uid = MyTexts.na;
-    //   });
-    // }
-
     if(userid.isNotEmpty){
       setState(() {
         uid = userid;
@@ -86,19 +75,7 @@ class _UserPageState extends State<UserPage> {
     }
   }
    final FirebaseAuth _auth = FirebaseAuth.instance;
-  // // Create an user object based on firebase user
-  // CurrentUserModel? _userFromFirebaseUser(User user) {
-  //   return  CurrentUserModel (uid: user.uid);
-  // }
-  //
-  //
-  // // auth change user stream
-  // Stream<CurrentUserModel?> get user{
-  //   return _auth.authStateChanges()
-  //       .map((User? user) => _userFromFirebaseUser(user!));
-  // }
 
-  /////////////////////////
   void hasData(){
     FirebaseFirestore.instance
         .collection('queTable')
@@ -161,8 +138,6 @@ class _UserPageState extends State<UserPage> {
               const SizedBox(height: 20,),
               showExistedQueData?_queDataShow():
               _requestForQue(),
-
-
 
             ],
           ),
