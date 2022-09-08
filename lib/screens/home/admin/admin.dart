@@ -105,26 +105,6 @@ class _AdminState extends State<Admin> {
                 ],
               ),
 
-
-              // StreamBuilder(
-              //   stream: regRef.snapshots(),
-              //     builder: (context, snapshot){
-              //     if(snapshot.hasError){
-              //       return Text("Error");
-              //      }
-              //     if(snapshot.hasData){
-              //       return ListView.builder(
-              //         itemCount: snapshot.data.toString().length,
-              //           itemBuilder: (context, index){
-              //           DocumentSnapshot doc = snapshot.data!.;
-              //           return Text("${snapshot.data!.d}");
-              //           });
-              //        }
-              //     return Text("loading");
-              //     }
-              //
-              // ),
-
               Text("All Counters",
                 style: MyTextStyle.regularStyle4(
                     fontColor: MyColors.primaryTextColor,
@@ -176,9 +156,6 @@ class _AdminState extends State<Admin> {
                     }
                 ),
               )
-
-
-
 
             ],
           ),

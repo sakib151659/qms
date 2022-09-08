@@ -1,14 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:qms/services/auth.dart';
 import 'package:qms/utils/colors_for_app.dart';
-
 import '../../screens/wrapper.dart';
 
 class CustomAppbar{
-  final AuthService _auth = AuthService();
 static getAppBar(BuildContext context, String title) {
-
   return AppBar(
     automaticallyImplyLeading:false,
     backgroundColor: MyColors.secondaryColor,
