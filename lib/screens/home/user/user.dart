@@ -129,7 +129,7 @@ class _UserPageState extends State<UserPage> {
                     fontSize: 50,
                     fontWeight: FontWeight.w600
                 ),),
-              Text("Que Management System",
+              Text("Queue Management System",
                 style: MyTextStyle.regularStyle4(
                     fontColor: MyColors.primaryTextColor,
                     fontSize: 15,
@@ -179,7 +179,7 @@ class _UserPageState extends State<UserPage> {
                 children: [
                   Text(branchName),
                   Text(counterNo),
-                  Text("In Que : "+snapshot.data!.docs.length.toString()),
+                  Text("In Queue : "+snapshot.data!.docs.length.toString()),
 
                 ],
               ),
@@ -466,7 +466,7 @@ class _UserPageState extends State<UserPage> {
             children: [
               const Icon(Icons.person, color: Colors.white,),
               const SizedBox(width: 10,),
-              Text("View Que", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
+              Text("View Queue", style: MyTextStyle.regularStyle(fontColor: Colors.white),)
             ],),
         ),
 

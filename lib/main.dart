@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontSize: 50,
                   fontWeight: FontWeight.w600
               ),),
-            Text("Que Management System",
+            Text("Queue Management System",
               style: MyTextStyle.regularStyle4(
                   fontColor: MyColors.primaryTextColor,
                   fontSize: 15,
