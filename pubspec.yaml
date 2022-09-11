@@ -40,6 +40,7 @@ dependencies:
   provider: ^6.0.3
   get: ^4.6.5
   shared_preferences: ^2.0.15
+  rename: ^2.0.1
 
 
 
